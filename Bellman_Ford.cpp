@@ -96,7 +96,6 @@ Queue::~Queue()
 //****************Queue class ends here************************
 
 //****************Heap class begins **********************
-
 class HeapItem
 {
 public:
@@ -183,9 +182,7 @@ public:
 	    return t;
 
 	}
-
-
-    //The function updates the key value of an existing data
+	//The function updates the key value of an existing data
     //stored in the heap
 	//Note that updates can result in an increase or decrease of key value
 	//Call to heapify or buheapify is required
@@ -294,51 +291,6 @@ public:
 
 	}
 
-
-
-	/*
-	void buHeapify(int i)
-	{
-	    if(i == 1)
-            return;
-
-	    //printf("%d  (%d - %f)  %d\n",i ,A[i].data , A[i].key ,map[A[i].data] );
-	    if( i%2 !=0){
-            buHeapify(i-1);
-            if(A[i].key < A[(i-1)/2].key){
-                map[A[i].data] = (i-1)/2;
-                map[A[(i-1)/2].data] = i;
-                HeapItem t = A[i];
-                A[i] = A[(i-1)/2];
-                A[(i-1)/2] = t;
-
-
-                //cout<<A[i].key<<" - "<<map[A[i].data]<<endl;
-            }
-
-            buHeapify((i-1)/2);
-
-	    }
-	    else{
-            buHeapify(i-1);
-            if(i == 1)
-                return;
-            if(A[i].key < A[i/2].key){
-                map[A[i].data] = i/2;
-                map[A[i/2].data] = i;
-
-                HeapItem t = A[i];
-                A[i] = A[i/2];
-                A[i/2] = t;
-
-                //cout<<A[i].key<<" - "<<map[A[i].data]<<endl;
-            }
-            buHeapify(i/2);
-	    }
-
-	}
-	*/
-
     void printHeap()
     {
         printf("Heap length: %d\n", heapLength);
@@ -355,12 +307,7 @@ public:
 		else return false;
 	}
 };
-
-
-
 //*************** Heap class ends *******************
-
-
 
 //****************Dynamic ArrayList class based************************
 class GraphNode{
@@ -368,9 +315,6 @@ public:
 int data;
 int weight;
 };
-
-
-
 
 class ArrayList
 {
@@ -511,6 +455,7 @@ public:
 	void visit(int source);
     void MST_Prim(int root);
     void printMST();
+    void Bellman_Ford(int source);
 };
 
 
@@ -536,10 +481,7 @@ void Graph::MST_Prim( int root){
 
     }
 
-    }
-
-   // printGraph();
-
+}
   printMST();
 
 
@@ -556,6 +498,32 @@ void Graph::printMST(){
     }
 
     cout<<count;
+}
+
+void Graph::Bellman_Ford(int source){
+    for(int i=0 ; i<nVertices ; i++){
+        dist[i] = INFINITY;
+    }
+    dist[source] = 0;
+    for(int i = 0 ; i < nVertices ; i++){
+        for(int i=0 ; i < nEdges ; i++){
+            if(dist[i] > dist[i]+adjList[i].getItem(adjList[i].searchItem(parent[i])).weight){
+                dist[i] = dist[i]+adjList[i].getItem(adjList[i].searchItem(parent[i])).weight;
+            }
+        }
+    }
+
+    for(int i= 0 ; i < nEdges ; i++){
+        if(dist[i] > dist[i] + dist[i]+adjList[i].getItem(adjList[i].searchItem(parent[i])).weight)
+        {
+            cout<<"No Solution"<<endl;
+            return;
+        }
+    }
+
+
+
+
 }
 
 
@@ -651,8 +619,6 @@ bool Graph::hasCommonAdjacent(int u, int v)
 
 void Graph::bfs(int source)
 {
-    //complete this function
-    //initialize BFS variables
     for(int i=0; i<nVertices; i++)
     {
         color[i] = WHITE ;
@@ -678,8 +644,6 @@ void Graph::bfs(int source)
                 q.enqueue(idx);
                 parent[idx] = source;
                 flag = false;
-//                printf("%d: %d\n",idx,k);
-
             }
         }
         if(!flag){
@@ -689,12 +653,8 @@ void Graph::bfs(int source)
 
     }
     printf("\n");
-//    for(int i = 0; i<nVertices ; i++){
-//     printf("Dist(%d): %d ",i,dist[i]);
-//    }
-//    printf("\n");
-
 }
+
 void Graph::visit(int source){
     if(color[source] == 3){
         return;
@@ -727,9 +687,6 @@ void Graph::dfs(int source=0)
             visit(i);
         }
     }
-//    for(int i = 0; i<nVertices ; i++){
-//     printf("Node: %d ; Color: %d ; Starting time : %d ; Finish : %d\n",i,color[i],discovery[i],finish[i] );
-//    }
 
 }
 
@@ -742,8 +699,6 @@ int Graph::getDist(int u, int v)
             return dist[i];
         }
     }
-    //returns the shortest path distance from u to v
-    //must call bfs using u as the source vertex, then use distance array to find the distance
     return INFINITY ;
 }
 
@@ -788,108 +743,20 @@ Graph::~Graph()
 //******main function to test your code*************************
 int main(void)
 {
-    int n , m;
+    int n , m ,u,v,w;
+;
     Graph g;
     printf("Enter number of vertices & edges: ");
     scanf("%d%d", &n , &m);
     g.setnVertices(n , m);
 
-    int u,v,w;
 
     for(int i =0 ; i<m ; i++){
         scanf("%d%d%d", &u, &v , &w);
-        g.addEdge(u, v , w);
+        g.addEdge(u-1, v-1 , w);
 
     }
     g.printGraph();
 
-    g.MST_Prim(0);
 
-/*
-    while(1)
-    {
-        printf("1. Add edge. 2. Remove edge 3. isEdge\n");
-        printf("4. Degree . 5. Print Graph  6. Exit.\n");
-        printf("7. Common Adjacent. 8. BFS  9. DFS. 10. Shortest Path\n");
-
-        int ch;
-        scanf("%d",&ch);
-        if(ch==1)
-        {
-            int u, v;
-            scanf("%d%d", &u, &v);
-            g.addEdge(u, v);
-        }
-        else if(ch==2)
-        {
-            int u, v;
-            scanf("%d%d", &u, &v);
-            g.removeEdge(u ,v);
-
-        }
-        else if(ch==3)
-        {
-            int u, v;
-            scanf("%d%d", &u, &v);
-            if(g.isEdge(u ,v)){
-                printf("%d-%d is an edge\n",u,v);
-            }
-            else{
-                printf("%d-%d is not an edge\n",u,v);
-            }
-
-        }
-        else if(ch==4)
-        {
-            int u;
-            scanf("%d", &u);
-            int deg = g.getDegree(u);
-            printf("Vertex %d has degree %d\n",u, deg);
-        }
-        else if(ch==5)
-        {
-            g.printGraph();
-        }
-        else if(ch==6)
-        {
-            break;
-        }
-        else if(ch==7)
-        {
-            int u, v;
-            scanf("%d%d", &u, &v);
-            if(g.hasCommonAdjacent(u, v)){
-                printf("%d and %d has common adjacent\n",u,v);
-            }
-            else{
-                printf("%d and %d does not have common adjacent\n",u,v);
-            }
-        }
-        else if(ch==8)
-        {
-            int u;
-            scanf("%d", &u);
-            g.bfs(u);
-        }
-        else if(ch==9)
-        {
-            int u;
-            scanf("%d", &u);
-            g.dfs(u);
-            printf("\n");
-        }
-        else if(ch==10)
-        {
-            int u ,v;
-            scanf("%d%d", &u,&v);
-            int x = g.getDist(u ,v);
-            if(x!= INFINITY){
-                printf("Shortest path is => %d\n",x);
-            }
-            else{
-                printf("Graph is not connected\n");
-            }
-        }
-    }
-*/
 }
