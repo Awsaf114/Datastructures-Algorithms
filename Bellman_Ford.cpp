@@ -37,6 +37,7 @@ Queue::Queue()
     length = 0 ;
     front = 0;
     rear = 0;
+
 }
 
 
@@ -415,7 +416,7 @@ void ArrayList::printList()
 {
     int i;
     for(i=0;i<length;i++)
-        printf("(%d,%d)", list[i].data , list[i].weight);
+        printf("(%d,%d)", list[i].data +1 , list[i].weight);
 //    printf("Current size: %d, current length: %d\n", listMaxSize, length);
 }
 
@@ -440,7 +441,7 @@ class Graph
 	//you must use pointers and dynamic allocation
 
 public:
-	Graph(bool dir = false);
+	Graph(bool dir = true);
 	~Graph();
 	void setnVertices(int n , int m);
 	void addEdge(int u, int v , int w);
@@ -501,27 +502,60 @@ void Graph::printMST(){
 }
 
 void Graph::Bellman_Ford(int source){
+    bool flag = true;
+
     for(int i=0 ; i<nVertices ; i++){
         dist[i] = INFINITY;
+        parent[i] = -10000;
     }
     dist[source] = 0;
-    for(int i = 0 ; i < nVertices ; i++){
-        for(int i=0 ; i < nEdges ; i++){
-            if(dist[i] > dist[i]+adjList[i].getItem(adjList[i].searchItem(parent[i])).weight){
-                dist[i] = dist[i]+adjList[i].getItem(adjList[i].searchItem(parent[i])).weight;
+
+
+    for(int i = 0 ; i< nVertices ; i++){
+
+        for(int j = 0 ; j< nVertices ; j++){
+            for(int k =0 ; k< adjList[j].getLength() ; k++ )
+            {
+           //     cout<<dist[j]<<" ";
+                if(dist[adjList[j].getItem(k).data] > dist[j] + adjList[j].getItem(k).weight){
+
+                    parent[adjList[j].getItem(k).data] = j;
+                    dist[adjList[j].getItem(k).data] = dist[j] + adjList[j].getItem(k).weight;
+
+                }
+
             }
+
         }
+       // cout<<endl;
+
     }
 
-    for(int i= 0 ; i < nEdges ; i++){
-        if(dist[i] > dist[i] + dist[i]+adjList[i].getItem(adjList[i].searchItem(parent[i])).weight)
-        {
-            cout<<"No Solution"<<endl;
-            return;
-        }
+    for(int j = 0 ; j< nVertices ; j++){
+            for(int k =0 ; k< adjList[j].getLength() ; k++ )
+            {
+                if(dist[adjList[j].getItem(k).data] > dist[j] + adjList[j].getItem(k).weight){
+
+                     //d[i] = d[adjList[i].getItem(k).data] + adjList[i].getItem(k).data;
+                    flag = false;
+                    break;
+                }
+
+            }
+
     }
 
+    cout<<"V\t\tV.d \t\tV.pi "<<endl;
 
+    for(int i=0 ; i<nVertices ; i++){
+        cout<<i+1<<"\t\t"<<dist[i]<<"\t\t"<<parent[i]+1<<endl;
+    }
+    if(flag){
+        cout<<"Negative cycle: NO";
+    }
+    else{
+        cout<<"Negative cycle: YES";
+    }
 
 
 }
@@ -707,7 +741,7 @@ void Graph::printGraph()
     printf("\nNumber of vertices: %d, Number of edges: %d\n", nVertices, nEdges);
     for(int i=0;i<nVertices;i++)
     {
-        printf("%d:", i);
+        printf("%d:", i+1);
         adjList[i].printList();
 //        for(int j=0; j<adjList[i].getLength();j++)
 //        {
@@ -743,8 +777,8 @@ Graph::~Graph()
 //******main function to test your code*************************
 int main(void)
 {
-    int n , m ,u,v,w;
-;
+    int n , m ,u,v,w , s;
+
     Graph g;
     printf("Enter number of vertices & edges: ");
     scanf("%d%d", &n , &m);
@@ -757,6 +791,10 @@ int main(void)
 
     }
     g.printGraph();
+    printf("Enter Source: ");
 
+    scanf("%d", &s);
+
+    g.Bellman_Ford(s-1);
 
 }
