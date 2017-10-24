@@ -181,6 +181,29 @@ void Graph::Floyd_Warshall(){
     }
 
 
+    for(int i = 0 ; i< nVertices ; i++){
+        for(int j=0 ; j<nVertices ; j++){
+            cout<<i+1<<" - ";
+        if(i==j)
+        {
+            cout<<j+1<<" Same Node"<<endl;
+             continue;
+        }
+        if(pi[i][j] == INFINITY){
+            cout<<j+1<<" No Path"<<endl;
+            continue;
+        }
+        else{
+            int k = j;
+            while(pi[i][k] != i+1){
+                cout<<pi[i][k]<<" - ";
+                k = pi[i][k]-1;
+            }
+            cout<<j+1<<endl;
+        }
+    }
+    }
+
 }
 
 
