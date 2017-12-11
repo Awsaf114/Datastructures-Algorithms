@@ -11,7 +11,6 @@ typedef pair<int,int> ii;
 typedef vector<ii> vii;
 
 
-#define V 10
 
 
 //******************Graph class starts here**************************
@@ -237,7 +236,7 @@ bool Graph::hasCommonAdjacent(int u, int v)
 
 bool Graph::pathexists(vector<vii> resGraph , int s, int t){
     // Create a visited array and mark all vertices as not visited
-    bool visited[V];
+    bool visited[nVertices];
     memset(visited, 0, sizeof(visited));
 
     // Create a queue, enqueue source vertex and mark source vertex
