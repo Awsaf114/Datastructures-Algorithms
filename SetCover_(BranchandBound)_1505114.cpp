@@ -19,33 +19,6 @@ bool *notInFinal = new bool[n + 1];
 int *unCov = new int[m];
 
 
-class treeNode
-{
-public:
-    int item;
-    treeNode * left; //points to left child
-    treeNode * right; //points to right child
-};
-
-treeNode * root;
-
-
-void initializeTree()
-{
-    root = 0;
-}
-
-treeNode * makeTreeNode(int item)
-{
-    treeNode * node ;
-    node = (treeNode *)malloc(sizeof(treeNode));
-    node->item = item;
-    node->left = 0;
-    node->right = 0;
-    return node;
-};
-
-// To compare two points
 class Node
 {
 public:
